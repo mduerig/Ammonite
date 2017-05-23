@@ -4,6 +4,8 @@ import java.io.PrintWriter
 
 import ammonite.util.{Printer, Util}
 
+import scala.language.postfixOps
+
 
 object IvyConstructor extends IvyConstructor
 trait IvyConstructor{
@@ -33,6 +35,9 @@ object IvyThing{
       logger.init()
       Some(logger)
     }
+
+    //set proxy properties from env:
+    ProxyFromEnv.setPropProxyFromEnv()
 
     val start = coursier.Resolution(dependencies.toSet)
 
@@ -84,4 +89,3 @@ object IvyThing{
               .mkString(".")
   
 }
-
