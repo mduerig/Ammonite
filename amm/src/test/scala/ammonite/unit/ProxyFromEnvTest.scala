@@ -1,6 +1,7 @@
-package ammonite.runtime.tools
+package ammonite.unit
 
 import utest._
+
 /**
   * This test is focused on function `setPropProxyFromEnv`, and not to test if proxy is OK or not.
   *
@@ -27,7 +28,7 @@ object ProxyFromEnvTest extends TestSuite {
     "empty2_proxy" -> null
   )
 
-  import ProxyFromEnv._
+  import ammonite.main.ProxyFromEnv._
 
   val tests = this {
     "print-test" - {

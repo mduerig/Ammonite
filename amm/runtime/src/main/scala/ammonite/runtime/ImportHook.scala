@@ -4,7 +4,7 @@ import java.io.File
 
 
 import ammonite.ops.{read, _}
-import ammonite.runtime.tools.IvyThing
+import ammonite.runtime.tools.IvyResolver
 import ammonite.util.Util.CodeSource
 import ammonite.util._
 
@@ -138,7 +138,8 @@ object ImportHook{
           case Array(a, b, c) =>
             Right(coursier.Dependency(coursier.Module(a, b), c))
           case Array(a, "", b, c) =>
-            Right(coursier.Dependency(coursier.Module(a, b + "_" + IvyThing.scalaBinaryVersion), c))
+            val suffixedModule = b + "_" + IvyResolver.scalaBinaryVersion
+            Right(coursier.Dependency(coursier.Module(a, suffixedModule), c))
           case _ => Left(signature)
         }
       }

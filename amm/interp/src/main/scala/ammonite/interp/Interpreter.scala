@@ -592,7 +592,7 @@ class Interpreter(val printer: Printer,
     storage.ivyCache().get(cacheKey) match{
       case Some(res) => Right(res.map(new java.io.File(_)))
       case None =>
-        ammonite.runtime.tools.IvyThing.resolveArtifact(
+        ammonite.runtime.tools.IvyResolver.resolveArtifact(
           interpApi.repositories(),
           coordinates,
           verbose = verboseOutput
@@ -652,7 +652,7 @@ class Interpreter(val printer: Printer,
 
     val beforeExitHooks = interp.beforeExitHooks
 
-    val repositories = Ref(ammonite.runtime.tools.IvyThing.defaultRepositories)
+    val repositories = Ref(ammonite.runtime.tools.IvyResolver.defaultRepositories)
 
     object load extends DefaultLoadJar with Load {
 

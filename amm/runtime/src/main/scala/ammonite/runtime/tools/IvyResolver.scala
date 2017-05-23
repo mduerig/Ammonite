@@ -13,7 +13,7 @@ trait IvyConstructor{
     def %(artifactId: String) = coursier.Module(groupId, artifactId)
     def %%(artifactId: String) = coursier.Module(
       groupId,
-      artifactId + "_" + IvyThing.scalaBinaryVersion
+      artifactId + "_" + IvyResolver.scalaBinaryVersion
     )
   }
   implicit class ArtifactIdExt(t: coursier.Module){
@@ -21,7 +21,7 @@ trait IvyConstructor{
   }
 }
 
-object IvyThing{
+object IvyResolver{
   def resolveArtifact(repositories: Seq[coursier.Repository],
                       dependencies: Seq[coursier.Dependency],
                       verbose: Boolean) = synchronized {
@@ -35,9 +35,6 @@ object IvyThing{
       logger.init()
       Some(logger)
     }
-
-    //set proxy properties from env:
-    ProxyFromEnv.setPropProxyFromEnv()
 
     val start = coursier.Resolution(dependencies.toSet)
 

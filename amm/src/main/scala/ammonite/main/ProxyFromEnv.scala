@@ -1,17 +1,14 @@
-package ammonite.runtime.tools
+package ammonite.main
 
 /**
   * Give Ammonite the ability to read (linux) system proxy environment variables
   * and convert them into java proxy properties. Which allows Ammonite to work
   * through proxy automatically, instead of setting `System.properties` manually.
   *
-  * See issue 460.
-  *
-  * Parameter pattern: https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html
-  *
-  * Created by cuz on 17-5-21.
+  * Parameter pattern:
+  * https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html
   */
-private object ProxyFromEnv {
+object ProxyFromEnv {
   private lazy val KeyPattern ="""([\w\d]+)_proxy""".r
   private lazy val UrlPattern ="""([\w\d]+://)?(.+@)?([\w\d\.]+):(\d+)/?""".r
 
@@ -19,7 +16,7 @@ private object ProxyFromEnv {
     * Get current proxy environment variables.
     */
   private def getEnvs =
-    sys.env.map { case (k, v) => (k.toLowerCase, v.toLowerCase) }.filterKeys(_.endsWith("proxy"))
+    sys.env.collect{ case (k, v) if k.endsWith("proxy") => (k.toLowerCase, v.toLowerCase) }
 
   /**
     * Convert single proxy environment variable to corresponding system proxy properties.
@@ -33,13 +30,16 @@ private object ProxyFromEnv {
     case (KeyPattern(proto), UrlPattern(_, cred, host, port)) =>
       val propHost = s"$proto.proxyHost" -> host
       val propPort = s"$proto.proxyPort" -> port
-      val propCred = if (cred.isDefined) {
-        val credPair = cred.dropRight(1).split(":")
-        val propUser = s"$proto.proxyUser" -> credPair.head
-        val propPassword = credPair.drop(1).map(s"$proto.proxyPassword" -> _)
-        Seq(propUser) ++ propPassword
-      } else Nil
-      Seq(propHost, propPort) ++ propCred toMap
+      val propCred =
+        if (cred == null || cred.isEmpty) Nil
+        else {
+          val credPair = cred.dropRight(1).split(":")
+          val propUser = s"$proto.proxyUser" -> credPair.head
+          val propPassword = credPair.drop(1).map(s"$proto.proxyPassword" -> _)
+          Seq(propUser) ++ propPassword
+        }
+
+      (Seq(propHost, propPort) ++ propCred).toMap
     case bad => Map.empty
   }
 
@@ -49,20 +49,11 @@ private object ProxyFromEnv {
     * Existing properties will not be overwritten.
     */
   def setPropProxyFromEnv(envs: Map[String, String] = this.getEnvs): Unit = {
-    val sysProps = sys.props
-    val proxyProps = envs.flatMap { env =>
-      val props = envToProps(env)
-      if (props.isEmpty) println(s"Warn: environment variable$env cannot be parsed.")
-      props
-    }.filter(p => !sysProps.exists(sp => sp._1 == p._1))
-    sysProps ++= proxyProps
-  }
+    val proxyProps = envs
+      .flatMap(envToProps)
+      .filter(p => !sys.props.exists(sp => sp._1 == p._1))
 
-  /**
-    * helper implicit conversion: add isDefined method to String.
-    */
-  implicit private class StringIsDefined(s: String) {
-    def isDefined: Boolean = s != null && s.length > 0
+    sys.props ++= proxyProps
   }
 
 }

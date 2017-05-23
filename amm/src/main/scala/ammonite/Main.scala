@@ -233,6 +233,9 @@ object Main{
         )
     }
 
+    //set proxy properties from env:
+    ammonite.main.ProxyFromEnv.setPropProxyFromEnv()
+
     // amm foo.sc
     // amm -h bar
     // amm foo.sc hello world
