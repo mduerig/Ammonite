@@ -8,9 +8,9 @@ matrix:
   # run first, but docs to run last since the artifacts need time to
   # sync to maven central before becoming available
 
-  - env: CI_SCRIPT="ci/build.sc artifacts"
-    jdk: oraclejdk8
-    scala: 2.11.11
+#  - env: CI_SCRIPT="ci/build.sc artifacts"
+#    jdk: oraclejdk8
+#    scala: 2.11.11
 
 
   # Each `test` call is manually sharded out into `published/test` and
@@ -20,33 +20,33 @@ matrix:
   - env: CI_SCRIPT="ci/build.sc test published/test"
     jdk: oraclejdk8
     scala: 2.12.2
-  - env: CI_SCRIPT="ci/build.sc test integration/test"
-    jdk: oraclejdk8
-    scala: 2.12.2
-
-  - env: CI_SCRIPT="ci/build.sc test published/test"
-    jdk: oraclejdk8
-    scala: 2.11.11
-  - env: CI_SCRIPT="ci/build.sc test integration/test"
-    jdk: oraclejdk8
-    scala: 2.11.11
-
-  - env: CI_SCRIPT="ci/build.sc test published/test"
-    jdk: openjdk7
-    scala: 2.10.6
-  - env: CI_SCRIPT="ci/build.sc test integration/test"
-    jdk: openjdk7
-    scala: 2.10.6
-
-
-  # These are relatively (?) quick so put them last
-  - env: CI_SCRIPT="ci/build.sc docs"
-    jdk: oraclejdk8
-    scala: 2.11.11
-
-  - env: CI_SCRIPT="ci/build.sc executable"
-    jdk: oraclejdk8
-    scala: 2.11.11
+#  - env: CI_SCRIPT="ci/build.sc test integration/test"
+#    jdk: oraclejdk8
+#    scala: 2.12.2
+#
+#  - env: CI_SCRIPT="ci/build.sc test published/test"
+#    jdk: oraclejdk8
+#    scala: 2.11.11
+#  - env: CI_SCRIPT="ci/build.sc test integration/test"
+#    jdk: oraclejdk8
+#    scala: 2.11.11
+#
+#  - env: CI_SCRIPT="ci/build.sc test published/test"
+#    jdk: openjdk7
+#    scala: 2.10.6
+#  - env: CI_SCRIPT="ci/build.sc test integration/test"
+#    jdk: openjdk7
+#    scala: 2.10.6
+#
+#
+#  # These are relatively (?) quick so put them last
+#  - env: CI_SCRIPT="ci/build.sc docs"
+#    jdk: oraclejdk8
+#    scala: 2.11.11
+#
+#  - env: CI_SCRIPT="ci/build.sc executable"
+#    jdk: oraclejdk8
+#    scala: 2.11.11
 
 
 
